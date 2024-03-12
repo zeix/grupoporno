@@ -30,35 +30,15 @@ export type ISettingsOptions = {
 
 export const revalidate = 30;
 
-const CACHE_KEY = "settingsCache";
-const CACHE_EXPIRY = 30 * 60 * 1000; // 30 minutes in milliseconds
-
-export const getSettings = async () => {
-  const cachedData = localStorage.getItem(CACHE_KEY);
-  if (cachedData) {
-    const { data, timestamp } = JSON.parse(cachedData);
-    if (Date.now() - timestamp < CACHE_EXPIRY) {
-      return data;
-    }
-  }
-
+export const getSettings = cache(async () => {
   const settingsRequest = await axios.get(
     `${process.env.NEXT_PUBLIC_API_URL}/settings/list/all`
   );
 
   const settings: ISettingsRequestOptions = settingsRequest.data;
-  const data = settings.data;
 
-  localStorage.setItem(
-    CACHE_KEY,
-    JSON.stringify({
-      data,
-      timestamp: Date.now(),
-    })
-  );
-
-  return data;
-};
+  return settings.data;
+});
 
 
 export const updateSetting = async (
