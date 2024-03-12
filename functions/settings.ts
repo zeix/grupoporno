@@ -29,18 +29,21 @@ export type ISettingsOptions = {
 };
 
 export const revalidate = 30;
+let cachedSettings: ISettingsOptions | null = null;
+export const getSettings = async () => {
+  if (cachedSettings) {
+    return cachedSettings;
+  }
 
-export const getSettings = cache(async () => {
   const settingsRequest = await axios.get(
     `${process.env.NEXT_PUBLIC_API_URL}/settings/list/all`
   );
 
   const settings: ISettingsRequestOptions = settingsRequest.data;
+  cachedSettings = settings.data;
 
-  return settings.data;
-});
-
-
+  return cachedSettings;
+};
 export const updateSetting = async (
   name: string,
   newValue: string,
