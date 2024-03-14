@@ -1,6 +1,6 @@
 import { cache } from "react";
 import axios from "axios";
-import { revalidatePath } from "next/cache";
+import * as fs from 'fs'
 import { revalidateAdminPanel, revalidatePanel } from "./actions";
 
 export const revalidate = 30;
@@ -41,6 +41,7 @@ export const getHomeAllApprovedGroups = cache(async () => {
 });
 
 export const getAllApprovedGroups = cache(async () => {
+  try {
   const groupsRequest = await axios.get(
     `${process.env.NEXT_PUBLIC_API_URL}/groups/list/all?approved=true`
   );
@@ -48,6 +49,9 @@ export const getAllApprovedGroups = cache(async () => {
   const groups: IAllApprovedGroupsRequest = await groupsRequest.data;
 
   return groups.data;
+  }catch(error) {
+    return null
+  }
 });
 
 export const getSearchGroups = cache(async (search_term: string) => {
@@ -61,23 +65,34 @@ export const getSearchGroups = cache(async (search_term: string) => {
 })
 
 export const getAllImpulsedGroups = cache(async () => {
-  const groupsRequest = await axios.get(
-    `${process.env.NEXT_PUBLIC_API_URL}/groups/list/all?impulse=true`
-  );
+  try {
+    const groupsRequest = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_URL}/groups/list/all?impulse=true`
+    );
+  
+    console.log(groupsRequest)
+  
+    const groups: IAllApprovedGroupsRequest = await groupsRequest.data;
+    
+    return groups.data;
+  } catch (error) {
+    return null
+  }
 
-  const groups: IAllApprovedGroupsRequest = await groupsRequest.data;
-
-  return groups.data;
 });
 
 export const getAllReprovedGroups = cache(async () => {
-  const groupsRequest = await axios.get(
-    `${process.env.NEXT_PUBLIC_API_URL}/groups/list/all?approved=false`
-  );
-
-  const groups: IAllApprovedGroupsRequest = await groupsRequest.data;
-
-  return groups.data;
+  try {
+    const groupsRequest = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_URL}/groups/list/all?approved=false`
+    );
+  
+    const groups: IAllApprovedGroupsRequest = await groupsRequest.data;
+  
+    return groups.data;
+  } catch (error) {
+    return null
+  }
 });
 
 export const getOneGroup = cache(async (slug: string) => {
@@ -104,30 +119,33 @@ export const getOneCategoryGroups = cache(async (categoryid: number) => {
 });
 
 
-export const createOneGroup = async (
+export async function createOneGroup(
   title: string,
   link: string,
   categoryId: number,
   groupDescriptions: string,
-  groupBannerLink: string,
+  groupBanner: File,
   type: string,
   token: string
-) => {
-  const groupsRequest = await axios.post(
-    `${process.env.NEXT_PUBLIC_API_URL}/groups/create`,
-    {
-      title,
-      link,
-      categoryId,
-      description: groupDescriptions,
-      banner_image: groupBannerLink,
-      type,
-    },
-    {
-      headers: { Authorization: "Bearer " + token },
-    }
-  );
+) {
+  const data = new FormData();
+  data.append('group-image', groupBanner);
+  data.append('title', title);
+  data.append('link', link);
+  data.append('categoryId', categoryId.toString());
+  data.append('description', groupDescriptions);
+  data.append('type', type);
 
+  const config = {
+    method: 'post',
+    maxBodyLength: Infinity,
+    url: `${process.env.NEXT_PUBLIC_API_URL}/groups/create`,
+    headers: {
+      Authorization: 'Bearer ' + token,
+    },
+    data: data
+  };
+  const groupsRequest = await axios(config);
   revalidatePanel();
 
   return groupsRequest;

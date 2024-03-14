@@ -6,7 +6,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { getCookie, setCookie } from "@/lib/cookies";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-
+import { useReCaptcha } from "next-recaptcha-v3";
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -14,8 +14,10 @@ export default function LoginPage() {
 
   const { toast } = useToast();
   const router = useRouter();
-
+  const { executeRecaptcha } = useReCaptcha();
   const handleFormSubmit = async () => {
+    await executeRecaptcha("form_submit");
+
     try {
       if (
         email.length > 0 &&

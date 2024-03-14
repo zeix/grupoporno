@@ -16,8 +16,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { FaBars, FaChevronDown, FaTimes } from "react-icons/fa";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Search from "./SearchBar";
+import { getCookie } from "@/lib/cookies";
+import { NewGroupDialog } from "../panel/NewGroupDialog";
 
 export const Navbar = ({
   settings,
@@ -28,8 +30,16 @@ export const Navbar = ({
 }) => {
   const [isNavbarOpen, setIsNavbarOpen] = useState(false);
 
-  const router = useRouter();
+  const [loged, setLoged] = useState(false)
 
+  const router = useRouter();
+  useEffect(() => {
+    getCookie("auth:token").then((response) => {
+      if (response !== undefined) {
+        setLoged(true)
+      }
+    });
+  }, [router]);
   return (
     <>
       <nav className="p-5 bg-theme-500 hidden lg:block">
@@ -43,9 +53,9 @@ export const Navbar = ({
           }} />
             <Link
               className="text-lg text-white flex items-center gap-2 font-semibold transition-all focus:outline-0 hover:text-slate-200"
-              href="/"
+              href={loged ?"/painel":'/'}
             >
-              Início
+              {loged ? 'Painel' : 'Inicio'}
             </Link>
             {categories.length > 0 && (
               <>
@@ -84,6 +94,17 @@ export const Navbar = ({
                 )}
               </>
             )}
+
+            {
+              loged ?
+                <NewGroupDialog categories={categories}>
+                    <button
+              className="text-lg text-white flex p-3 py-2 border-2 border-white rounded-lg items-center gap-2 font-semibold transition-all focus:outline-0 hover:bg-white hover:text-theme-500"
+            >
+              Enviar Grupo
+            </button>
+                </NewGroupDialog>
+              :
             <button
               onClick={async () => {
                 router.push("/login");
@@ -92,6 +113,8 @@ export const Navbar = ({
             >
               Enviar Grupo
             </button>
+            }
+
           </ul>
         </div>
       </nav>
@@ -149,14 +172,28 @@ export const Navbar = ({
               </>
             )}
           </ul>
-          <button
-            onClick={async () => {
-              router.push("/login");
-            }}
-            className="text-center text-theme-500 justify-center text-2xl flex p-3 py-2 bg-white w-full rounded-lg items-center gap-2 font-semibold transition-all focus:outline-0 hover:bg-white hover:text-theme-500"
-          >
-            Enviar Grupo
-          </button>
+
+                {
+                  loged ?
+                  <NewGroupDialog categories={categories}>
+                       <button
+                  className="text-center text-theme-500 justify-center text-2xl flex p-3 py-2 bg-white w-full rounded-lg items-center gap-2 font-semibold transition-all focus:outline-0 hover:bg-white hover:text-theme-500"
+                >
+                  Enviar Grupo
+                </button>
+                    </NewGroupDialog>
+                  :
+                <button
+                  onClick={async () => {
+                    router.push("/login");
+                  }}
+                  className="text-center text-theme-500 justify-center text-2xl flex p-3 py-2 bg-white w-full rounded-lg items-center gap-2 font-semibold transition-all focus:outline-0 hover:bg-white hover:text-theme-500"
+                >
+                  Enviar Grupo
+                </button>
+
+                }
+
         </div>
       </div>
     </>

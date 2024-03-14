@@ -20,7 +20,7 @@ export default async function AdminPanelPage() {
   return (
     <div className="container">
       <div className="grid py-10 gap-5 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
-        {approvedGroups.map((group) => {
+        {approvedGroups&& approvedGroups.map((group) => {
           return (
             <div
               key={group.id}
@@ -58,7 +58,7 @@ export default async function AdminPanelPage() {
           );
         })}
       </div>
-      {approvedGroups.length === 0 && (
+      {approvedGroups&& approvedGroups.length === 0 && (
         <h1 className="text-2xl w-full text-center font-bold mb-20">
           Nenhum grupo aprovado existente
         </h1>

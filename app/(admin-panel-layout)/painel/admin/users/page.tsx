@@ -1,4 +1,13 @@
-// @ts-ignore
+
+import axios from "axios";
+import { Trash } from "lucide-react";
+import { cookies } from "next/headers";
+
+
+export const metadata = {
+  title: "Admin",
+};
+
 type IUserOptions = {
   id: number;
   email: string;
@@ -10,31 +19,50 @@ export interface IGetAllUsers {
   message: string;
   data: IUserOptions[]
 }
-import { getCookie } from "@/lib/cookies";
-
-export const metadata = {
-  title: "Admin",
-};
 
 export const getAllUsers = async (token: string): Promise<IGetAllUsers> => {
-  const usersRequest = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/user/list/all?page=1&pagesize=10`,
+  try {
+    const usersRequest = await axios.patch(
+      `${process.env.NEXT_PUBLIC_API_URL}/user/list/all?page=1&pagesize=10`,
+      null,
+      {
+        headers: {
+          Authorization: 'Bearer '+ token
+        }
+      }
+    );
+
+    console.log(usersRequest)
+    const groups: IGetAllUsers = await usersRequest.data as any;
+
+    return groups;
+
+  } catch (error) {
+    console.log(error)
+    return null
+  }
+}
+
+export default async function AdminPanelPage() {
+  const cookiesTore = cookies(); 
+
+  let users: null | IGetAllUsers = await getAllUsers(cookiesTore.get('auth:token').value);
+  const deleteUserFc = async (user_id: string, token: string) => {
+
+    const confirm = window.confirm('Deseja deletar esse usúario (todos os grupos relacionados serão deletados)')
+
+    if(!confirm) return
+    await axios.delete( `${process.env.NEXT_PUBLIC_API_URL}/user/delete/${user_id}`,
     {
       headers: { Authorization: "Bearer " + token },
-    }
-  );
-
-  console.log(usersRequest)
-  const groups: IGetAllUsers = await usersRequest.json() as any;
-
-  return groups;
-}
-export default async function AdminPanelPage() {
-  const token = await getCookie("auth:token");
-  const users = await getAllUsers(token?.value || '') as any;
+    })
+  }
 
   return (
     <div className="container">
+        <p>
+          Por motivos de segurança deleções de úsuario não são permitidas pelo script, acesse seu cpanel/WHM e execute a deleção via o phpMyAdmin
+        </p>
       <div className="grid py-10 gap-5 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
         {users && users.data.map((user: any) => {
           return (
@@ -47,19 +75,11 @@ export default async function AdminPanelPage() {
                   {user.email}
                 </h1>
               </div>
-              <div className="flex gap-2">
-{/*       
-                 <DeleteUserDialog group={user as any} token={token?.value}>
-                  <button>
-                    <Trash color="#e65555" />
-                  </button>
-                </DeleteUserDialog> */}
-              </div> 
             </div>
           );
         })}
       </div>
-      {users.data.length === 0 && (
+      {!users || users.data.length === 0 && (
         <h1 className="text-2xl w-full text-center font-bold mb-20">
           Nenhum Usuario Existente
         </h1>

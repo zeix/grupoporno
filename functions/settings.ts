@@ -29,9 +29,14 @@ export type ISettingsOptions = {
 };
 
 export const revalidate = 30;
+const cacheExpirationTime = 60000; // Tempo de expiração do cache em milissegundos (60 segundos)
 let cachedSettings: ISettingsOptions | null = null;
+let lastCacheUpdateTime: number | null = null;
+
 export const getSettings = async () => {
-  if (cachedSettings) {
+  console.log('Cached', cachedSettings);
+
+  if (cachedSettings && lastCacheUpdateTime && Date.now() - lastCacheUpdateTime < cacheExpirationTime) {
     return cachedSettings;
   }
 
@@ -41,21 +46,39 @@ export const getSettings = async () => {
 
   const settings: ISettingsRequestOptions = settingsRequest.data;
   cachedSettings = settings.data;
+  lastCacheUpdateTime = Date.now();
+
+  // Configurar um temporizador para limpar o cache após o tempo de expiração
+  setTimeout(() => {
+    cachedSettings = null;
+    lastCacheUpdateTime = null;
+  }, cacheExpirationTime);
 
   return cachedSettings;
 };
 export const updateSetting = async (
   name: string,
   newValue: string,
-  token: string
+  token: string,
+  setting_image?: File
 ) => {
-  const settingsRequest = await axios.patch(
-    `${process.env.NEXT_PUBLIC_API_URL}/settings/patch`,
-    { option: name, valOption: newValue },
-    {
-      headers: { Authorization: "Bearer " + token },
-    }
-  );
+  const data = new FormData()
+  if(setting_image) {
+    data.append('config-image', setting_image)
+  }
+  data.append('option', name)
+  data.append('valOption', newValue)
+  const config = {
+    method: 'patch',
+    url: `${process.env.NEXT_PUBLIC_API_URL}/settings/patch`,
+    headers: {
+      Authorization: 'Bearer ' + token,
+    },
+    data: data,
+    maxBodyLength: Infinity,
+  }
+  const settingsRequest = await axios(config)
+
 
   revalidateAdminPanel();
 

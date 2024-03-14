@@ -4,9 +4,9 @@ import { ShowDescription } from "@/components/panel/ShowDescription";
 import { getAllCategories } from "@/functions/categories";
 import { getAllApprovedGroups, getAllReprovedGroups } from "@/functions/groups";
 import { getCookie } from "@/lib/cookies";
-import { Check, Trash, X } from "lucide-react";
+import { Check, X } from "lucide-react";
 import Link from "next/link";
-import ReactQuill from "react-quill";
+
 
 export const metadata = {
   title: "Admin",
@@ -26,7 +26,7 @@ export default async function AdminPanelPage() {
             Grupos pendentes
           </h1>
           <ul className="mt-5 flex flex-col gap-3">
-            {reprovedGroups.map((group) => {
+            {reprovedGroups && reprovedGroups.map((group) => {
               return (
                 <li
                   key={group.id}
@@ -71,7 +71,7 @@ export default async function AdminPanelPage() {
                 </li>
               );
             })}
-            {reprovedGroups.length === 0 && (
+            {reprovedGroups && reprovedGroups.length === 0 && (
               <h1 className="text-slate-500">
                 Nenhum grupo pendente encontrado!
               </h1>
@@ -83,14 +83,14 @@ export default async function AdminPanelPage() {
           <div className="flex flex-col text-2xl mt-5 p-10 rounded-lg border border-theme-text">
             Você tem{" "}
             <span className="text-5xl font-bold text-theme-500">
-              {approvedGroups.length} grupos
+              {approvedGroups && approvedGroups.length} grupos
             </span>{" "}
             <b className="text-sm text-slate-500 mt-1">Aprovados</b>
           </div>
           <div className="flex flex-col text-2xl mt-5 p-10 rounded-lg border border-theme-text">
             Você tem{" "}
             <span className="text-5xl font-bold text-theme-500">
-              {reprovedGroups.length} grupos
+              {reprovedGroups && reprovedGroups.length} grupos
             </span>{" "}
             <b className="text-sm text-slate-500 mt-1">Aguardando aprovação</b>
           </div>

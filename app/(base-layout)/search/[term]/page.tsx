@@ -23,7 +23,7 @@ export default async function SearchPage({params}: any) {
                       key={group.id}
                       href={group.link}
                       style={{
-                        background: `linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.8)), url(${group.bannerImage})`,
+                        background: `linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.8)), url(${process.env.NEXT_PUBLIC_FILES_URL+"/"+group.bannerImage})`,
                         backgroundPosition: "center center",
                       }}
                       className="text-center flex flex-col justify-end aspect-square items-center w-full rounded p-5 transition-all hover:scale-105 "

@@ -56,11 +56,11 @@ export default async function Home() {
           </div>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10 mt-5">
-          {categories.map((category) => {
+          { categories && categories.map((category) => {
             return (
               <Link
                 key={category.slug}
-                href={`/grupos/${category.slug}`}
+                href={`/grupos/${category.slug}?platform=telegram`}
                 style={{
                   background: `linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.8)), url(${category.banner_image})`,
                   backgroundPosition: "center center",
@@ -86,7 +86,7 @@ export default async function Home() {
           </div>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10 mt-5">
-          {groups.map((group) => {
+          {groups && groups.map((group) => {
             return (
               <Link
                 key={group.id}
@@ -94,7 +94,7 @@ export default async function Home() {
                   (category) => category.id === group.categoryId
                 )?.slug}/${group.slug}`}
                 style={{
-                  background: `linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.8)), url(${group.bannerImage})`,
+                  background: `linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.8)), url(${process.env.NEXT_PUBLIC_FILES_URL+"/"+group.bannerImage})`,
                   backgroundPosition: "center center",
                 }}
                 className="text-center flex flex-col justify-end aspect-square items-center w-full rounded p-5 transition-all hover:scale-105 "

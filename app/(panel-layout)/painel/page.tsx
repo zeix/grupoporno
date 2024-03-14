@@ -20,7 +20,7 @@ export default async function PanelPage() {
         <div className="bg-theme-800 p-10 rounded-lg h-fit">
           <h1 className="text-theme-500 font-bold text-3xl">Seus grupos</h1>
           <ul className="mt-5 flex flex-col gap-3">
-            {approvedGroups
+            {approvedGroups && approvedGroups
               .filter((group) => group.userIdCreated === user.id)
               .map((group) => {
                 return (
@@ -63,6 +63,7 @@ export default async function PanelPage() {
             Você tem{" "}
             <span className="text-5xl font-bold text-theme-500">
               {
+                approvedGroups &&
                 approvedGroups.filter(
                   (group) => group.userIdCreated === user.id
                 ).length
@@ -75,6 +76,7 @@ export default async function PanelPage() {
             Você tem{" "}
             <span className="text-5xl font-bold text-theme-500">
               {
+                reprovedGroups && 
                 reprovedGroups.filter(
                   (group) => group.userIdCreated === user.id
                 ).length

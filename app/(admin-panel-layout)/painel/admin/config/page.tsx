@@ -3,6 +3,7 @@ import { getCookie } from "@/lib/cookies";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getSettings } from "@/functions/settings";
 import { InputSetting } from "@/components/panel/InputSetting";
+import ImageArea from "@/components/ui/imagearea";
 
 export const metadata = {
   title: "Admin",
@@ -77,6 +78,7 @@ export default async function AdminPanelPage() {
               placeholder="Url da logo"
               token={token?.value || ""}
             />
+            {/* <ImageArea /> */}
           </TabsContent>
           <TabsContent value="colors" className="flex flex-col gap-5">
             <InputSetting

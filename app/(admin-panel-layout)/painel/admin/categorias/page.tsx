@@ -1,8 +1,9 @@
 import { DeleteCategoryDialog } from "@/components/panel/DeleteCategoryDialog";
+import { EditCategoryDialog } from "@/components/panel/EditCategoryDialog";
 import { NewCategoryDialog } from "@/components/panel/NewCategoryDialog";
 import { getAllCategories } from "@/functions/categories";
 import { getCookie } from "@/lib/cookies";
-import { Trash } from "lucide-react";
+import { Pencil, Trash } from "lucide-react";
 
 export const metadata = {
   title: "Admin",
@@ -37,6 +38,11 @@ export default async function AdminPanelPage() {
                     <Trash color="#e65555" />
                   </button>
                 </DeleteCategoryDialog>
+                <EditCategoryDialog category={category}  token={token?.value}>
+                  <button>
+                    <Pencil color="#13ff46" />
+                  </button>
+                </EditCategoryDialog>
               </div>
             </div>
           );

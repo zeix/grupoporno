@@ -19,13 +19,13 @@ export default async function GroupsPage() {
         <div>
           <h1 className="font-bold text-4xl">Todos os grupos disponíveis</h1>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10 mt-10">
-            {groups.map((group) => {
+            {groups && groups.map((group) => {
               return (
                 <Link
                   key={group.id}
                   href={group.link}
                   style={{
-                    background: `linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.8)), url(${group.bannerImage})`,
+                    background: `linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.8)), url(${process.env.NEXT_PUBLIC_FILES_URL+"/"+group.bannerImage})`,
                     backgroundPosition: "center center",
                   }}
                   className="text-center flex flex-col justify-end aspect-square items-center w-full rounded p-5 transition-all hover:scale-105 "

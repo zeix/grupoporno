@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode, useEffect, useState } from "react";
+import { ChangeEvent, ReactNode, useEffect, useState } from "react";
 
 import { ICategoryOptions } from "@/functions/categories";
 
@@ -32,6 +32,7 @@ import ReactQuill from "react-quill";
 
 import "react-quill/dist/quill.snow.css";
 import obterInfoGrupo from "@/functions/obterinfoGrupo";
+import ImageArea from "../ui/imagearea";
 
 export const NewGroupDialog = ({
   children,
@@ -44,7 +45,7 @@ export const NewGroupDialog = ({
   const [categoryId, setCategoryId] = useState<null | string>(null);
   const [groupLink, setGroupLink] = useState("");
   const [groupDescription, setGroupDescription] = useState("");
-  const [groupBannerImage, setGroupBannerImage] = useState("");
+  const [groupBannerImage, setGroupBannerImage] = useState<File | null>(null);
   const [type, setType] = useState("");
   const [loading, setLoading] = useState(false);
   useEffect(() => {
@@ -60,6 +61,17 @@ export const NewGroupDialog = ({
   }, [groupLink])
   
 
+  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setGroupBannerImage(file);
+    }
+  };
+
+  const handleRemoveImage = () => {
+    setGroupBannerImage(null);
+
+  };
   const validateForm = (): boolean => {
     if (title.length === 0) {
       toast({
@@ -88,7 +100,7 @@ export const NewGroupDialog = ({
       return false;
     }
 
-    if (groupBannerImage.length === 0 || !groupBannerImage) {
+    if (!groupBannerImage) {
       toast({
         title: "Digite um link de imagem",
         variant: "destructive",
@@ -212,14 +224,43 @@ export const NewGroupDialog = ({
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="username" className="text-right">
-              Link da imagem
+              Imagem de capa
             </Label>
-            <Input
+            <div>
+      <input
+        type="file"
+        accept="image/*"
+        onChange={handleImageChange}
+        style={{ display: "none" }}
+      />
+      {groupBannerImage ? (
+        <div className="relative">
+          <img
+            src={URL.createObjectURL(groupBannerImage)}
+            alt="Selected"
+            className="block w-full h-auto rounded-md"
+          />
+          <button
+            type="button"
+            onClick={handleRemoveImage}
+            className="absolute top-2 right-2 px-2 py-1 bg-red-500 text-white rounded-md"
+          >
+            Remover
+          </button>
+        </div>
+      ) : (
+        <label className="w-full h-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+          <input type="file" accept="image/*" onChange={handleImageChange} />
+        </label>
+      )}
+    </div>
+            {/* <Input
               id="username"
               placeholder="https://img.com/img.png"
               className="col-span-3"
+              type="image"
               onChange={(e) => setGroupBannerImage(e.target.value)}
-            />
+            /> */}
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="username" className="text-right">
