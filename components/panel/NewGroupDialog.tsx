@@ -27,13 +27,11 @@ import { toast } from "../ui/use-toast";
 import { createOneGroup } from "@/functions/groups";
 import { getCookie } from "@/lib/cookies";
 import { DialogClose } from "@radix-ui/react-dialog";
-import { Textarea } from "../ui/textarea";
-import ReactQuill from "react-quill";
 
+const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 import "react-quill/dist/quill.snow.css";
 import obterInfoGrupo from "@/functions/obterinfoGrupo";
-import ImageArea from "../ui/imagearea";
-
+import dynamic from "next/dynamic";
 export const NewGroupDialog = ({
   children,
   categories,
@@ -49,7 +47,6 @@ export const NewGroupDialog = ({
   const [type, setType] = useState("");
   const [loading, setLoading] = useState(false);
   useEffect(() => {
-    console.log(groupLink)
     const obter = async ()  => {
       const dataGrupo = await obterInfoGrupo(groupLink)
 
@@ -266,12 +263,16 @@ export const NewGroupDialog = ({
             <Label htmlFor="username" className="text-right">
               Descrição do grupo
             </Label>
-            <ReactQuill
-              className="col-span-3"
-              theme="snow"
-              value={groupDescription}
-              onChange={setGroupDescription}
-            />
+            {
+              typeof window !== 'undefined' &&
+              <ReactQuill
+                className="col-span-3"
+                theme="snow"
+                value={groupDescription}
+                onChange={setGroupDescription}
+              />
+
+            }
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="username" className="text-right">

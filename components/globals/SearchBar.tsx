@@ -11,7 +11,6 @@ const Search = (props: SearchProps) => {
     const { onSearch } = props;
     const [value, setValue] = useState('');
     const [showSearch, setShowSearch] = useState(!props.isMobile);
-    console.log(value)
     const searchHandler = (event: ChangeEvent<HTMLInputElement>) => {
         const { target } = event;
         setValue(target.value);

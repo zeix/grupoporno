@@ -31,8 +31,6 @@ export const getAllUsers = async (token: string): Promise<IGetAllUsers> => {
         }
       }
     );
-
-    console.log(usersRequest)
     const groups: IGetAllUsers = await usersRequest.data as any;
 
     return groups;

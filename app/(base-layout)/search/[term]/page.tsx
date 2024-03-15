@@ -17,7 +17,6 @@ export default async function SearchPage({params}: any) {
             <Suspense fallback={<>Carregando...</>}>
               {
                 groups.map((group) => {
-                  console.log(group)
                   return (
                     <Link
                       key={group.id}

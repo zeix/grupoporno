@@ -1,11 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    images: {
-        
-    },
-    typescript: {
-        ignoreBuildErrors: true
-    },
+    reactStrictMode: true
 }
 
 module.exports = nextConfig

@@ -34,8 +34,6 @@ let cachedSettings: ISettingsOptions | null = null;
 let lastCacheUpdateTime: number | null = null;
 
 export const getSettings = async () => {
-  console.log('Cached', cachedSettings);
-
   if (cachedSettings && lastCacheUpdateTime && Date.now() - lastCacheUpdateTime < cacheExpirationTime) {
     return cachedSettings;
   }

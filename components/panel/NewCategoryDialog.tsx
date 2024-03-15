@@ -74,8 +74,6 @@ export const NewCategoryDialog = ({
     if (validateForm()) {
       createOneCategory(title, bannerImage, slug, token)
         .then((response) => {
-          console.log(response);
-
           if (response.status === 200) {
             toast({
               title: "Categoria criada com sucesso",
