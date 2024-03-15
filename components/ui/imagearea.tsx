@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 // components/ImageArea.server.tsx
 
 import { ChangeEvent } from "react";

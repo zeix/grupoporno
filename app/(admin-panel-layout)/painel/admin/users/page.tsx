@@ -20,7 +20,7 @@ export interface IGetAllUsers {
   data: IUserOptions[]
 }
 
-export const getAllUsers = async (token: string): Promise<IGetAllUsers> => {
+const getAllUsers = async (token: string): Promise<IGetAllUsers> => {
   try {
     const usersRequest = await axios.patch(
       `${process.env.NEXT_PUBLIC_API_URL}/user/list/all?page=1&pagesize=10`,
@@ -45,16 +45,6 @@ export default async function AdminPanelPage() {
   const cookiesTore = cookies(); 
 
   let users: null | IGetAllUsers = await getAllUsers(cookiesTore.get('auth:token').value);
-  const deleteUserFc = async (user_id: string, token: string) => {
-
-    const confirm = window.confirm('Deseja deletar esse usúario (todos os grupos relacionados serão deletados)')
-
-    if(!confirm) return
-    await axios.delete( `${process.env.NEXT_PUBLIC_API_URL}/user/delete/${user_id}`,
-    {
-      headers: { Authorization: "Bearer " + token },
-    })
-  }
 
   return (
     <div className="container">
