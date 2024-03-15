@@ -148,6 +148,14 @@ export default async function AdminPanelPage() {
               token={token?.value || ""}
             />
             <InputSetting
+              title="Chave do Recaptcha"
+              setting="recaptcha_key"
+              inputType="text"
+              defaultValue={settings.recaptcha_key}
+              placeholder="Recaptcha Key"
+              token={token?.value || ""}
+            />
+            <InputSetting
               title="Título da seção de categorias"
               setting="home_category_title"
               inputType="text"

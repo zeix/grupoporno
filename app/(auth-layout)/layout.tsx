@@ -27,7 +27,7 @@ export default async function BaseLayout({
 
   return (
     <div className="h-screen min-h-screen flex flex-col justify-between">
-      <ReCaptchaProvider reCaptchaKey="6Le0gpgpAAAAADTNDI4c0pQmX-__D3HrYJFgWhdw" >
+      <ReCaptchaProvider reCaptchaKey={settings.recaptcha_key} >
         <Navbar settings={settings} categories={categories} />
         <main>{children}</main>
         <Footer />

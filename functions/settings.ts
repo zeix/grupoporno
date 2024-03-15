@@ -26,6 +26,7 @@ export type ISettingsOptions = {
   home_category_desc: string;
   home_groups_title: string;
   home_groups_desc: string;
+  recaptcha_key: string
 };
 
 export const revalidate = 30;
